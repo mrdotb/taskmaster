@@ -14,4 +14,9 @@ defmodule ConfigTest do
     config = Config.new(%{cmd: "ls /tmp"})
     assert config.cmd == ["ls", "/tmp"]
   end
+
+  test "env part should be mapped to erlang str" do
+    config = Config.new(%{cmd: "env", env: %{marco: "polo"}})
+    assert config.env == [{'marco', 'polo'}]
+  end
 end
