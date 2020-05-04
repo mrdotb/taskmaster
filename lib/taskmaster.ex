@@ -1,0 +1,2 @@
+defmodule Taskmaster do
+end
