@@ -1,4 +1,8 @@
 defmodule Taskmaster.Process do
+  use GenServer
+
+  require Logger
+
   alias Taskmaster.Config, as: Config
 
   @doc """
@@ -40,9 +44,12 @@ defmodule Taskmaster.Process do
 
   def start(%Config{cmd: cmd} = config) do
     exe = find_executable(cmd)
-    |> IO.inspect()
     opts = build_opts(config)
-    |> IO.inspect()
     Port.open({:spawn_executable, exe}, opts)
   end
+
+  def start_link(%Config{name: name} = config) do
+    GenServer.start_link(__MODULE__, config, name: name)
+  end
+
 end

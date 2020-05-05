@@ -2,6 +2,7 @@ defmodule Taskmaster.Config do
   @enforce_keys [:cmd]
 
   defstruct [
+    :name,
     :cmd,
     :numprocs,
     :autostart,
@@ -35,7 +36,7 @@ defmodule Taskmaster.Config do
   }
 
   @doc """
-  Transform env from a map to a list of tuples in erlang string
+  Transform env from a map to a list of tuples in erlang string.
   """
   defp parse(:env , %{env: env} = args) do
     mapped_env = Enum.map(env, fn {key, value} ->
@@ -46,9 +47,11 @@ defmodule Taskmaster.Config do
     Map.put(args, :env, mapped_env)
   end
 
-
   defp parse(:cmd, %{cmd: ""}), do: :error
 
+  @doc """
+  Split the cmd line string into List.
+  """
   defp parse(:cmd, %{cmd: cmd} = args) do
     cmd_list = String.split(cmd, " ")
     Map.put(args, :cmd, cmd_list)
@@ -56,6 +59,9 @@ defmodule Taskmaster.Config do
 
   defp parse(_key, args), do: args
 
+  @doc """
+  Apply all parse function to map.
+  """
   defp parse(args) do
     keys = Map.keys(args)
 
@@ -67,15 +73,30 @@ defmodule Taskmaster.Config do
     end)
   end
 
+  @doc """
+  Generate a random 14 chars name for our future process.
+  """
+  defp add_name(args) do
+    name = :crypto.strong_rand_bytes(10)
+    |> Base.url_encode64(padding: false)
+
+    Map.put(args, :name, name)
+  end
+
   def new(args) when map_size(args) == 0, do: :error
 
+  @doc """
+  Create a %Config{} struct
+  """
   def new(args) do
     case parse(args) do
       :error ->
         :error
 
       args ->
-        config = Map.merge(@default_values, args)
+        config =
+          Map.merge(@default_values, args)
+          |> add_name
         struct(Taskmaster.Config, config)
     end
   end
