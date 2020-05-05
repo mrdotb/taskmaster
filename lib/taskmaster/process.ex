@@ -1,20 +1,41 @@
 defmodule Taskmaster.Process do
   alias Taskmaster.Config, as: Config
 
-  defp find_executable(cmd) do
-    List.first(cmd)
+  @doc """
+  Empty the env
+  """
+  def clean_env() do
+    :os.getenv()
+    |> Enum.map(&(:string.split(&1, '=')))
+    |> Enum.map(&List.first(&1))
+    |> Enum.each(&(:os.unsetenv(&1)))
+  end
+
+  @doc """
+  Will require a nif
+  https://andrealeopardi.com/posts/using-c-from-elixir-with-nifs/
+  https://github.com/msantos/perc
+  """
+  def set_umask(umask) do
+  end
+  def kill(signal) do
+  end
+
+  def find_executable(cmd) do
+    cmd
+    |> List.first()
     |> System.find_executable()
   end
 
   @doc """
-  Full documentation on
-  http://erlang.org/doc/man/erlang.html#open_port-2
+  Build opts for open_port function
+  https://erldocs.com/current/erts/erlang.html?i=0&search=open%20port#open_port/2
   """
-  defp build_opts(
+  def build_opts(
     %Config{cmd: cmd, workingdir: workingdir, env: env} = config
   ) do
     args = List.pop_at(cmd, 0) |> elem(1)
-    [:binary, args: args, cd: workingdir, env: [{'COOL_ENV', 'cool'}]]
+    [:binary, args: args, cd: workingdir, env: env]
   end
 
   def start(%Config{cmd: cmd} = config) do
