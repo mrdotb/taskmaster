@@ -1,21 +1,19 @@
 # Taskmaster
+> A 42 project
 
-**TODO: Add description**
 
-## Installation
+### Install elixir
+https://elixir-lang.org/install.html
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `taskmaster` to your list of dependencies in `mix.exs`:
-
-```elixir
-def deps do
-  [
-    {:taskmaster, "~> 0.1.0"}
-  ]
-end
+for ubuntu and debian friends :hand:
+```
+cd /tmp
+wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb
+sudo dpkg -i erlang-solutions_2.0_all.deb
+sudo apt-get update
+sudo apt-get install esl-erlang elixir
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/taskmaster](https://hexdocs.pm/taskmaster).
+### How to run ?
 
+TODO
